@@ -55,6 +55,7 @@ public typealias SwiftRefresherEventHandler = ((event: SwiftRefresherEvent) -> V
 public typealias SwiftRefresherCustomRefreshViewCreator = (() -> SwfitRefresherEventReceivable)
 
 private let DEFAULT_HEIGHT: CGFloat = 44.0
+private let DEFAULT_ENDING_DULATION: NSTimeInterval = 0.25
 
 public class Refresher: UIView {
     private var stateInternal = SwiftRefresherState.None
@@ -71,6 +72,7 @@ public class Refresher: UIView {
     
     public var state: SwiftRefresherState { return stateInternal }
     public var height: CGFloat = DEFAULT_HEIGHT
+    public var endingDuration: NSTimeInterval = DEFAULT_ENDING_DULATION
     
     deinit {
         if let scrollView = superview as? UIScrollView {
@@ -202,7 +204,9 @@ public class Refresher: UIView {
         scrollView.contentInset.top = scrollView.contentInset.top - height
         scrollView.contentOffset.y = scrollView.contentOffset.y - height
         let initialPoint = CGPoint(x: scrollView.contentOffset.x, y: scrollView.contentOffset.y + height)
-        scrollView.setContentOffset(initialPoint, animated: true)
+        UIView.animateWithDuration(endingDuration) { () -> Void in
+            scrollView.contentOffset = initialPoint
+        }
 
         let delay = 0.25 * Double(NSEC_PER_SEC)
         let when  = dispatch_time(DISPATCH_TIME_NOW, Int64(delay))
