@@ -208,7 +208,7 @@ public class Refresher: UIView {
             scrollView.contentOffset = initialPoint
         }
 
-        let delay = 0.25 * Double(NSEC_PER_SEC)
+        let delay = endingDuration * Double(NSEC_PER_SEC)
         let when  = dispatch_time(DISPATCH_TIME_NOW, Int64(delay))
         dispatch_after(when, dispatch_get_main_queue()) { [weak self] () -> Void in
             guard let s = self else { return }
